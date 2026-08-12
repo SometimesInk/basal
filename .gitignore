@@ -13,9 +13,6 @@ build
 # Ignore Gradle GUI config
 gradle-app.setting
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
 # Avoid ignore Gradle wrapper properties
 !gradle-wrapper.properties
 
@@ -55,3 +52,6 @@ tmp/
 local.properties
 .loadpath
 .factorypath
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
