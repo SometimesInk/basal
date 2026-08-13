@@ -1,18 +1,18 @@
 package ink.basal.evaluation;
 
-import ink.basal.deck.DeckRepository;
+import ink.basal.ApplicationState;
 import ink.basal.model.LexicalItem;
 
 public final class DeckItemResolver implements ItemResolver {
 
-  private final DeckRepository deckRepository;
+  private final ApplicationState applicationState;
 
-  public DeckItemResolver(DeckRepository deckRepository) {
-    this.deckRepository = deckRepository;
+  public DeckItemResolver(ApplicationState applicationState) {
+    this.applicationState = applicationState;
   }
 
   @Override
   public LexicalItem resolveItem(String id) {
-    return deckRepository.current().itemById(id);
+    return applicationState.currentDeck().itemById(id);
   }
 }

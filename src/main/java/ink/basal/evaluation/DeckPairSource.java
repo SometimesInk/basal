@@ -3,18 +3,18 @@ package ink.basal.evaluation;
 import java.util.List;
 
 import ink.basal.model.LexicalPair;
-import ink.basal.deck.DeckRepository;
+import ink.basal.ApplicationState;
 
 public final class DeckPairSource implements PairSource {
 
-  private final DeckRepository deckRepository;
+  private final ApplicationState applicationState;
 
-  public DeckPairSource(DeckRepository deckRepository) {
-    this.deckRepository = deckRepository;
+  public DeckPairSource(ApplicationState applicationState) {
+    this.applicationState = applicationState;
   }
 
   @Override
   public List<LexicalPair> pairs() {
-    return deckRepository.current().lexicalPairs();
+    return applicationState.currentDeck().lexicalPairs();
   }
 }

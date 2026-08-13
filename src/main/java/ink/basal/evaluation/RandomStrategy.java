@@ -7,10 +7,7 @@ import ink.basal.model.LexicalPair;
 import ink.basal.model.LexicalItem;
 import ink.basal.model.Recording;
 
-/**
- * RandomSelector
- */
-public class RandomSelector implements EvaluationSelector {
+public class RandomStrategy implements EvaluationStrategy {
   private static final Random random = new Random();
 
   @Override

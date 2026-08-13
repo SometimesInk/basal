@@ -16,26 +16,26 @@ public final class EvaluationEngine {
   private final PairSource pairSource;
   private final RecordingSource recordingSource;
 
-  private final EvaluationSelector selector;
+  private final EvaluationStrategy evaluationStrategy;
 
   public EvaluationEngine(ItemResolver itemResolver,
       PairSource pairSource,
       RecordingSource recordingSource,
-      EvaluationSelector selector) {
+      EvaluationStrategy evaluationStrategy) {
     this.itemResolver = itemResolver;
     this.pairSource = pairSource;
     this.recordingSource = recordingSource;
-    this.selector = selector;
+    this.evaluationStrategy = evaluationStrategy;
   }
 
   public Question nextQuestion() {
-    LexicalPair pair = selector.choosePair(pairSource.pairs());
+    LexicalPair pair = evaluationStrategy.choosePair(pairSource.pairs());
     List<LexicalItem> items = pair.asList().stream()
         .map(itemResolver::resolveItem)
         .toList();
-    LexicalItem item = selector.chooseItem(items);
+    LexicalItem item = evaluationStrategy.chooseItem(items);
     List<Recording> recordings = recordingSource.recordingsFor(item);
-    Recording recording = selector.chooseRecording(recordings);
+    Recording recording = evaluationStrategy.chooseRecording(recordings);
     // TODO: Move question creation outside this method
     return new Question(pair, recording);
   }

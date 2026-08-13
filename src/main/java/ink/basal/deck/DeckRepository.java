@@ -1,6 +1,5 @@
 package ink.basal.deck;
 
-import java.nio.file.Path;
 import java.util.List;
 
 public interface DeckRepository {
@@ -16,11 +15,5 @@ public interface DeckRepository {
   Deck byId(String id);
 
   int size();
-
-  Deck current();
-
-  DeckRepository load(Deck deck);
-
-  Path currentPath();
 
 }

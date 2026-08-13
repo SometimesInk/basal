@@ -5,25 +5,21 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import ink.basal.config.ConfigPaths;
+import ink.basal.config.ConfigRepository;
+
 public class DocumentDeckRepository implements DeckRepository {
 
-  // TODO: Make this crossplatform
-  // TODO: Use shared configuration interfaces instead of adding unrelated
-  // boilerplate here
-  private static final Path BASAL_DIRECTORY = Path.of(System.getenv("HOME"), ".basal");
-
   private final List<Deck> decks;
-
-  private Deck currentDeck = null;
-  private Path currentPath;
 
   public DocumentDeckRepository(List<Deck> decks) {
     this.decks = decks;
   }
 
-  public static DocumentDeckRepository create(DeckLoader deckLoader) {
+  public static DocumentDeckRepository create(ConfigRepository configRepository,
+      DeckLoader deckLoader) {
     List<Deck> decks = new ArrayList<>();
-    for (File subdirectory : BASAL_DIRECTORY.toFile().listFiles(File::isDirectory)) {
+    for (File subdirectory : ConfigPaths.dataDirectory().toFile().listFiles(File::isDirectory)) {
       decks.add(deckLoader.load(subdirectory.toPath()));
     }
 
@@ -60,19 +56,5 @@ public class DocumentDeckRepository implements DeckRepository {
 
   public int size() {
     return decks.size();
-  }
-
-  public Deck current() {
-    return currentDeck;
-  }
-
-  public DeckRepository load(Deck deck) {
-    currentDeck = deck;
-    currentPath = BASAL_DIRECTORY.resolve(deck.name());
-    return this;
-  }
-
-  public Path currentPath() {
-    return currentPath;
   }
 }

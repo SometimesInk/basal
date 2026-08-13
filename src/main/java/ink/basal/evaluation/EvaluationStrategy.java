@@ -6,7 +6,7 @@ import ink.basal.model.LexicalItem;
 import ink.basal.model.LexicalPair;
 import ink.basal.model.Recording;
 
-public interface EvaluationSelector {
+public interface EvaluationStrategy {
 
   LexicalPair choosePair(List<LexicalPair> pairs);
 

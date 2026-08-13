@@ -2,20 +2,20 @@ package ink.basal.evaluation;
 
 import java.util.List;
 
+import ink.basal.ApplicationState;
 import ink.basal.model.LexicalItem;
 import ink.basal.model.Recording;
-import ink.basal.deck.DeckRepository;
 
 public final class DeckRecordingSource implements RecordingSource {
 
-  private final DeckRepository deckRepository;
+  private final ApplicationState applicationState;
 
-  public DeckRecordingSource(DeckRepository deckRepository) {
-    this.deckRepository = deckRepository;
+  public DeckRecordingSource(ApplicationState applicationState) {
+    this.applicationState = applicationState;
   }
 
   @Override
   public List<Recording> recordingsFor(LexicalItem item) {
-    return deckRepository.current().recordingsFor(item.id());
+    return applicationState.currentDeck().recordingsFor(item.id());
   }
 }
