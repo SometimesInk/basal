@@ -6,9 +6,14 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
 public class JsonConfigRepository implements ConfigRepository {
+
+  private static final Logger LOG = LoggerFactory.getLogger(JsonConfigRepository.class);
 
   /**
    * Path of the config json file.
@@ -32,7 +37,7 @@ public class JsonConfigRepository implements ConfigRepository {
       currentConfig = gson.fromJson(reader.readAllAsString(), Config.class);
       return currentConfig;
     } catch (IOException e) {
-      throw new RuntimeException("Could not load config", e);
+      throw new RuntimeException("Could not read config", e);
     }
   }
 
@@ -54,6 +59,10 @@ public class JsonConfigRepository implements ConfigRepository {
   @Override
   public void init() {
     try {
+      if (!ConfigPaths.configDirectory().toFile().exists())
+        LOG.warn("No config directory '{}'", ConfigPaths.configDirectory());
+      if (!ConfigPaths.dataDirectory().toFile().exists())
+        LOG.warn("No data directory '{}'", ConfigPaths.configDirectory());
       Files.createDirectories(ConfigPaths.configDirectory());
       Files.createDirectories(ConfigPaths.dataDirectory());
     } catch (IOException e) {

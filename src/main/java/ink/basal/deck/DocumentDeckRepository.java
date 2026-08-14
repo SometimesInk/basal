@@ -5,10 +5,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import ink.basal.config.ConfigPaths;
-import ink.basal.config.ConfigRepository;
 
 public class DocumentDeckRepository implements DeckRepository {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DocumentDeckRepository.class);
 
   private final List<Deck> decks;
 
@@ -16,12 +20,14 @@ public class DocumentDeckRepository implements DeckRepository {
     this.decks = decks;
   }
 
-  public static DocumentDeckRepository create(ConfigRepository configRepository,
-      DeckLoader deckLoader) {
+  public static DocumentDeckRepository create(DeckLoader deckLoader) {
+    LOG.info("Creating DocumentDeckRepository from data path '{}'", ConfigPaths.dataDirectory());
     List<Deck> decks = new ArrayList<>();
     for (File subdirectory : ConfigPaths.dataDirectory().toFile().listFiles(File::isDirectory)) {
       decks.add(deckLoader.load(subdirectory.toPath()));
     }
+    if (decks.size() == 0)
+      LOG.warn("No decks found");
 
     return new DocumentDeckRepository(decks);
   }

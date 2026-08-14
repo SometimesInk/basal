@@ -3,6 +3,8 @@ package ink.basal;
 import java.nio.file.Path;
 
 import com.google.gson.Gson;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import ink.basal.config.ConfigPaths;
 import ink.basal.config.ConfigRepository;
@@ -16,11 +18,18 @@ import ink.basal.evaluation.DeckItemResolver;
 import ink.basal.evaluation.DeckPairSource;
 import ink.basal.evaluation.DeckRecordingSource;
 import ink.basal.evaluation.EvaluationEngine;
+import ink.basal.evaluation.EvaluationStrategy;
+import ink.basal.evaluation.ItemResolver;
+import ink.basal.evaluation.PairSource;
 import ink.basal.evaluation.RandomStrategy;
+import ink.basal.evaluation.RecordingSource;
+import ink.basal.ui.AudioPlayer;
 import ink.basal.ui.JavaSoundPlayer;
 import ink.basal.ui.cli.Cli;
 
 public final class Application {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
   private final ConfigRepository configRepository;
   private final ApplicationState applicationState;
@@ -48,26 +57,26 @@ public final class Application {
   }
 
   public static Application create() {
-    JsonConfigRepository configRepository = new JsonConfigRepository(
+    LOG.info("Starting basal");
+    ConfigRepository configRepository = new JsonConfigRepository(
         ConfigPaths.configDirectory().resolve("basal.json"), new Gson());
     configRepository.init();
 
     ApplicationState applicationState = new ApplicationState();
 
     DeckLoader deckLoader = new JsonDeckLoader();
-    DocumentDeckRepository deckRepository = DocumentDeckRepository.create(configRepository,
-        deckLoader);
+    DeckRepository deckRepository = DocumentDeckRepository.create(deckLoader);
 
-    RandomStrategy evaluationStrategy = new RandomStrategy();
-    DeckItemResolver itemResolver = new DeckItemResolver(applicationState);
-    DeckPairSource pairSource = new DeckPairSource(applicationState);
-    DeckRecordingSource recordingSource = new DeckRecordingSource(applicationState);
+    EvaluationStrategy evaluationStrategy = new RandomStrategy();
+    ItemResolver itemResolver = new DeckItemResolver(applicationState);
+    PairSource pairSource = new DeckPairSource(applicationState);
+    RecordingSource recordingSource = new DeckRecordingSource(applicationState);
     EvaluationEngine evaluationEngine = new EvaluationEngine(itemResolver,
         pairSource,
         recordingSource,
         evaluationStrategy);
 
-    JavaSoundPlayer audioPlayer = new JavaSoundPlayer(applicationState);
+    AudioPlayer audioPlayer = new JavaSoundPlayer(applicationState);
     Cli cli = new Cli(applicationState,
         configRepository,
         deckRepository,
@@ -83,9 +92,10 @@ public final class Application {
   }
 
   public void run() {
-    configRepository.init();
-
+    LOG.info("Starting CLI");
     cli.run();
+    LOG.info("Stopping CLI");
+    LOG.info("Stopping basal");
   }
 
 }

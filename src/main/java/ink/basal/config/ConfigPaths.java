@@ -17,7 +17,7 @@ public class ConfigPaths {
     return Path.of(
         System.getProperty("user.home"),
         ".local",
-        ".share",
+        "share",
         "basal");
   }
 }

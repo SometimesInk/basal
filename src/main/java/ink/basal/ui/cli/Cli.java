@@ -40,7 +40,6 @@ public class Cli {
   public void run() {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-      System.out.println("Found " + deckRepository.size() + " decks.");
       if (deckRepository.size() == 0) {
         System.out.println("No decks. Exiting.");
         return;
